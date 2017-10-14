@@ -2,6 +2,6 @@
 # show help for a command
 # this command shows the help for a command
 
-source "${CLI_DIR}/lib/lib-cli-help.sh"
+source "${CLI_DIR}/lib/lib-help.sh"
 
 long_desc cli

@@ -18,6 +18,4 @@ for f in "${dir}"/lib/cli*; do
     mv "$f" "$(dirname "$f")/$(basename "$f" | sed "s/cli\(.*\)/${1}\1/")"
 done
 
-# todo: orename libs
-
 echo Done

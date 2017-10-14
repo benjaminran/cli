@@ -49,6 +49,6 @@ function subcommands() {
 
 export CLI_DIR=$(get_dir)
 source "${CLI_DIR}/lib/lib-util.sh"
-source "${CLI_DIR}/lib/lib-cli-help.sh"
+source "${CLI_DIR}/lib/lib-help.sh"
 
 dispatch "${name}" "$@"
