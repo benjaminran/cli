@@ -7,6 +7,7 @@
 name=cli
 
 function dispatch() {
+    [[ $# -gt 1 ]] || usage "${name}"
     exit=0
     i=2
     while [[ $i -le $# ]]; do
@@ -27,15 +28,6 @@ function usage() {
     done
 }
 
-function maxlen() {
-    width=0
-    while read word; do
-        c=$(printf "${word}" | wc -c)
-        [[ $width -gt $c ]] || width=$c
-    done
-    echo $width
-}
-
 function get_dir() {
     src="${BASH_SOURCE[0]}"
     while [ -h "$src" ]; do
@@ -44,23 +36,6 @@ function get_dir() {
         [[ $src != /* ]] && src="$cli_dir/$src"
     done
     (cd -P "$(dirname "$src")/.." && pwd)
-}
-
-function help_lines() {
-    filename="${1}"
-    cat "${CLI_DIR}/lib/${filename}" | tail -n +2 | while read l; do
-        [[ "${l}" =~ ^#\  ]] && echo "${l:2}" || break
-    done
-}
-
-function short_desc() {
-    filename="${1}"
-    help_lines "${filename}" | head -n 1
-}
-
-function long_desc() {
-    filename="${1}"
-    help_lines "${filename}" | tail -n +2
 }
 
 function filename_for() {
@@ -73,4 +48,7 @@ function subcommands() {
 }
 
 export CLI_DIR=$(get_dir)
+source "${CLI_DIR}/lib/lib-util.sh"
+source "${CLI_DIR}/lib/lib-cli-help.sh"
+
 dispatch "${name}" "$@"
