@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+# short foo description
+# foo also has a longer, more detailed
+# description that explains that foo
+# prints foo
+
+echo foo

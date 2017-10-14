@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# list commands
+# this command lists all available commands
+echo commands

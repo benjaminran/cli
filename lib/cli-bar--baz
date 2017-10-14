@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# this is the short description for bar-baz
+# this is the long description for bar-baz
+echo bar-baz
+exit -1

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# show help for a command
+# this command shows the help for a command
+
+long_desc(cli)

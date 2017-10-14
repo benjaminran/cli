@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Short help description
+# The remaining lines form a longer help description.
+#
+# It lasts until the last consecutive comment line.
+
+name=cli
+
+function dispatch() {
+    exit=0
+    i=2
+    while [[ $i -le $# ]]; do
+        "${CLI_DIR}/lib/$(filename_for ${@:1:$i})"
+        exit=$?
+        let i+=1
+    done
+    [[ $exit -eq 0 ]] || usage "$@"
+}
+
+function usage() {
+    echo "Usage: $* <command>"
+    echo
+    echo "Commands:"
+    width=$(subcommands "$@" | maxlen)
+    subcommands "$@" | while read command; do
+        printf "  %${width}s  %s\n" "${command}" "$(short_desc "$(filename_for "$@" "${command}")")"
+    done
+}
+
+function maxlen() {
+    width=0
+    while read word; do
+        c=$(printf "${word}" | wc -c)
+        [[ $width -gt $c ]] || width=$c
+    done
+    echo $width
+}
+
+function get_dir() {
+    src="${BASH_SOURCE[0]}"
+    while [ -h "$src" ]; do
+        cli_dir="$( cd -P "$( dirname "$src" )" && pwd )"
+        src="$(readlink "$src")"
+        [[ $src != /* ]] && src="$cli_dir/$src"
+    done
+    (cd -P "$(dirname "$src")/.." && pwd)
+}
+
+function help_lines() {
+    filename="${1}"
+    cat "${CLI_DIR}/lib/${filename}" | tail -n +2 | while read l; do
+        [[ "${l}" =~ ^#\  ]] && echo "${l:2}" || break
+    done
+}
+
+function short_desc() {
+    filename="${1}"
+    help_lines "${filename}" | head -n 1
+}
+
+function long_desc() {
+    filename="${1}"
+    help_lines "${filename}" | tail -n +2
+}
+
+function filename_for() {
+    for arg in "$@"; do echo "${arg}" | sed 's/-/--/g'; done | tr "\n" "-" | sed 's/\(.*\)-$/\1/'
+}
+
+function subcommands() {
+    prefix="$(filename_for "$@")"
+    ls "${CLI_DIR}/lib" | grep "${prefix}-" | sed "s/^${prefix}-\(.*\)/\1/" | grep -v "[^-]-[^-]" | sed 's/--/-/g' | sort
+}
+
+export CLI_DIR=$(get_dir)
+dispatch "${name}" "$@"
