@@ -24,7 +24,7 @@ function usage() {
     echo "Commands:"
     width=$(subcommands "$@" | maxlen)
     subcommands "$@" | while read command; do
-        printf "  %${width}s  %s\n" "${command}" "$(short_desc "$(filename_for "$@" "${command}")")"
+        printf "  %-${width}s  %s\n" "${command}" "$(short_desc "$(filename_for "$@" "${command}")")"
     done
 }
 
